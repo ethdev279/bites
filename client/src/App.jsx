@@ -248,14 +248,13 @@ export default function App() {
               </Text>
             </Space>
           }
-          hoverable
           loading={loading?.read}
           actions={[
             <LikeOutlined key="like" />,
             <Popconfirm
               key="comment"
               onConfirm={() => handleCommentOnBite(bite?.id)}
-              title={"Comments"}
+              title="Comments"
               description={
                 <div>
                   <List

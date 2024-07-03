@@ -22,11 +22,11 @@ export default function SiteLayout({ children }) {
         <h3
           style={{
             margin: 0,
-            padding: "0 6px",
+            padding: "0 15px",
             fontWeight: "bold"
           }}
         >
-          Bites
+          💬 Bites
         </h3>
         <ConnectWallet
           theme={"light"} // light | dark
