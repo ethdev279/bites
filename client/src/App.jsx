@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Card,
   Button,
@@ -17,42 +17,30 @@ import {
   PictureOutlined,
   LikeOutlined,
   CommentOutlined,
-  ShareAltOutlined
+  ShareAltOutlined,
+  SyncOutlined
 } from "@ant-design/icons";
 import { useStorageUpload, useSigner, useAddress } from "@thirdweb-dev/react";
-import { ellipsisAddress, bitesContract } from "../utils";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import {
+  ellipsisAddress,
+  bitesContract,
+  subgraphClient as client
+} from "./utils";
+import { GET_BITES_QUERY } from "./utils/constants";
 import "./App.css";
 
-const { TextArea } = Input;
+const { TextArea, Search } = Input;
 const { Text } = Typography;
+dayjs.extend(relativeTime);
 
 export default function App() {
   const [biteInput, setBiteInput] = useState({
     content: "",
     image: null
   });
-  const [bites, setBites] = useState([
-    {
-      id: 1,
-      content: "This is the first bite!",
-      imageHash: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
-      author: "0xFirstUser",
-      comments: [
-        {
-          author: "0xCommenter1",
-          content: "Great post!",
-          timestamp: "2h ago"
-        }
-      ]
-    },
-    {
-      id: 2,
-      content: "Loving this new platform!",
-      imageHash: null,
-      author: "0xSecondUser",
-      comments: []
-    }
-  ]);
+  const [bites, setBites] = useState([]);
   const [loading, setLoading] = useState({
     read: false,
     post: false,
@@ -60,9 +48,48 @@ export default function App() {
   });
   const [showMyPosts, setShowMyPosts] = useState(false);
   const [commentInput, setCommentInput] = useState("");
+  const [searchInput, setSearchInput] = useState("");
   const { mutateAsync: upload } = useStorageUpload();
   const signer = useSigner();
   const account = useAddress();
+
+  const getBites = () => {
+    setLoading({ read: true });
+    client
+      .request(GET_BITES_QUERY, {
+        first: 10,
+        skip: 0,
+        orderBy: "createdAt",
+        orderDirection: "desc",
+        where: {
+          and: [
+            ...(showMyPosts
+              ? [
+                  {
+                    author: account
+                  }
+                ]
+              : []),
+            ...(searchInput
+              ? [
+                  {
+                    content_contains_nocase: searchInput
+                  }
+                ]
+              : [])
+          ]
+        }
+      })
+      .then((data) => {
+        console.log("data", data?.bites);
+        setBites(data?.bites);
+      })
+      .catch((err) => {
+        console.error("Error fetching bites", err);
+        message.error("Failed to fetch bites. Please try again later");
+      })
+      .finally(() => setLoading({ read: false }));
+  };
 
   const handlePostBite = async () => {
     console.log(biteInput);
@@ -124,6 +151,10 @@ export default function App() {
     }
   };
 
+  useEffect(() => {
+    getBites();
+  }, [showMyPosts, account]);
+
   return (
     <Space direction="vertical" size="large" style={{ width: "100%" }}>
       <Card
@@ -175,11 +206,28 @@ export default function App() {
           />
         )}
       </Card>
+      {/* Search box*/}
+
       <Space style={{ float: "right" }}>
+        <Search
+          placeholder="Search bites..."
+          onChange={(e) => setSearchInput(e.target.value)}
+          onSearch={getBites}
+          allowClear
+          enterButton
+        />
+        <Button
+          type="primary"
+          shape="circle"
+          onClick={getBites}
+          icon={<SyncOutlined spin={loading?.read} />}
+        />
         <Switch
+          title={account ? "My Posts" : "Connect wallet to filter"}
           checkedChildren="On"
           unCheckedChildren="Off"
           defaultChecked={showMyPosts}
+          disabled={!account}
           onChange={(checked) => setShowMyPosts(checked)}
         />
         <label>My Posts Only</label>
@@ -190,10 +238,14 @@ export default function App() {
           title={
             <Space>
               <Avatar
-                src={`https://api.dicebear.com/5.x/open-peeps/svg?seed=${bite?.author}`}
+                src={`https://api.dicebear.com/5.x/open-peeps/svg?seed=${bite?.author?.id}`}
                 style={{ border: "1px solid grey" }}
               />
-              <Text>{ellipsisAddress(bite?.author) + " • " + " 2h ago"}</Text>
+              <Text title={dayjs(bite?.createdAt * 1000).format("MMM D, YY")}>
+                {ellipsisAddress(bite?.author?.id) +
+                  " • " +
+                  dayjs(bite?.createdAt * 1000).fromNow()}
+              </Text>
             </Space>
           }
           hoverable
@@ -203,24 +255,31 @@ export default function App() {
             <Popconfirm
               key="comment"
               onConfirm={() => handleCommentOnBite(bite?.id)}
-              title={
+              title={"Comments"}
+              description={
                 <div>
                   <List
                     dataSource={bite?.comments}
                     renderItem={(comment) => (
-                      <List.Item key={comment?.author}>
+                      <List.Item key={comment?.author?.id}>
                         <List.Item.Meta
                           avatar={
                             <Avatar
-                              src={`https://api.dicebear.com/5.x/open-peeps/svg?seed=${comment?.author}`}
+                              src={`https://api.dicebear.com/5.x/open-peeps/svg?seed=${comment?.author?.id}`}
                             />
                           }
                           title={
-                            <Text>{ellipsisAddress(comment?.author)}</Text>
+                            <Text>{ellipsisAddress(comment?.author?.id)}</Text>
                           }
                           description={comment?.content}
                         />
-                        <Text>{comment?.createdAt}</Text>
+                        <Text
+                          title={dayjs(comment?.createdAt * 1000).format(
+                            "MMM D, YY"
+                          )}
+                        >
+                          {dayjs(comment?.createdAt * 1000).fromNow()}
+                        </Text>
                       </List.Item>
                     )}
                   />

@@ -1,4 +1,5 @@
 import { Contract } from "@ethersproject/contracts";
+import { GraphQLClient, gql } from "graphql-request";
 import { BITES_CONTRACT_ADDRESS } from "./constants";
 
 const BitesABI = [
@@ -9,6 +10,9 @@ const BitesABI = [
 ];
 
 export const bitesContract = new Contract(BITES_CONTRACT_ADDRESS, BitesABI);
+
+const subgraphUrl = "https://api.studio.thegraph.com/proxy/18583/bites/version/latest";
+export const subgraphClient = new GraphQLClient(subgraphUrl);
 
 export const ellipsisAddress = (address) =>
   address.slice(0, 6) + "..." + address.slice(-4);
