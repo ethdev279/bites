@@ -1,0 +1,27 @@
+type Bite @entity {
+  id: ID!
+  content: String!
+  imageHash: String!
+  author: User!
+  comments: [Comment!]! @derivedFrom(field: "bite")
+  createdAt: BigInt!
+  updatedAt: BigInt!
+}
+
+type Comment @entity {
+  id: ID!
+  bite: Bite!
+  content: String!
+  author: User!
+  createdAt: BigInt!
+  updatedAt: BigInt!
+} 
+
+type User @entity {
+  id: Bytes!
+  address: String!
+  bites: [Bite!]! @derivedFrom(field: "author")
+  comments: [Comment!]! @derivedFrom(field: "author")
+  createdAt: BigInt!
+  updatedAt: BigInt!
+}

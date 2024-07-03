@@ -1,0 +1,30 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Bites
+    network: sepolia
+    source:
+      address: "0xf37a972B8432260135eDaD65b499A1D29Beaf493"
+      abi: Bites
+      startBlock: 6236233
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - User
+        - Bite
+        - Comment
+      abis:
+        - name: Bites
+          file: ./abis/Bites.json
+      eventHandlers:
+        - event: BiteCreated(indexed uint256,string,string,indexed address)
+          handler: handleBiteCreated
+        - event: CommentedOnBite(indexed uint256,indexed uint256,string,indexed address)
+          handler: handleCommentedOnBite
+      file: ./src/bites.ts
