@@ -8,7 +8,10 @@ import {
   Avatar,
   Typography,
   Image,
-  Switch
+  Switch,
+  Popconfirm,
+  List,
+  message
 } from "antd";
 import {
   PictureOutlined,
@@ -16,6 +19,8 @@ import {
   CommentOutlined,
   ShareAltOutlined
 } from "@ant-design/icons";
+import { useStorageUpload, useSigner, useAddress } from "@thirdweb-dev/react";
+import { ellipsisAddress, bitesContract } from "../utils";
 import "./App.css";
 
 const { TextArea } = Input;
@@ -26,19 +31,26 @@ export default function App() {
     content: "",
     image: null
   });
-  const [image, setImage] = useState(null);
   const [bites, setBites] = useState([
     {
       id: 1,
       content: "This is the first bite!",
       imageHash: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
-      author: "0xFirstUser"
+      author: "0xFirstUser",
+      comments: [
+        {
+          author: "0xCommenter1",
+          content: "Great post!",
+          timestamp: "2h ago"
+        }
+      ]
     },
     {
       id: 2,
       content: "Loving this new platform!",
       imageHash: null,
-      author: "0xSecondUser"
+      author: "0xSecondUser",
+      comments: []
     }
   ]);
   const [loading, setLoading] = useState({
@@ -47,22 +59,81 @@ export default function App() {
     comment: false
   });
   const [showMyPosts, setShowMyPosts] = useState(false);
+  const [commentInput, setCommentInput] = useState("");
+  const { mutateAsync: upload } = useStorageUpload();
+  const signer = useSigner();
+  const account = useAddress();
 
-  const handleContentChange = (e) => setContent(e.target.value);
-
-  const handleImageChange = (info) => {
-    setImage(info.file);
+  const handlePostBite = async () => {
+    console.log(biteInput);
+    if (!signer || !account)
+      return message.error("Please connect your wallet first");
+    if (!biteInput.content)
+      return message.error("Bite Content cannot be empty");
+    setLoading({ post: true });
+    try {
+      let imageHash = "";
+      if (biteInput?.image) {
+        message.info("Uploading image to IPFS...");
+        const [imageIpfs] = await upload({
+          data: [biteInput?.image],
+          options: {
+            uploadWithoutDirectory: true
+          }
+        });
+        console.log("uploadRes -> t", imageIpfs);
+        imageHash = imageIpfs?.split("://")[1];
+        message.success("Image uploaded successfully");
+      }
+      // create new bite in contract
+      const tx = await bitesContract
+        .connect(signer)
+        .createBite(biteInput?.content, imageHash);
+      console.log("tx", tx);
+      await tx.wait();
+      message.success("Bite posted successfully");
+      setBiteInput({ content: "", image: null });
+    } catch (err) {
+      console.error("Error posting bite", err);
+      message.error("Failed to post bite. Please try again later");
+    } finally {
+      setLoading({ post: false });
+    }
   };
 
-  const handlePost = () => {
-    // TODO: Post content and image to the server
+  const handleCommentOnBite = async (biteId) => {
+    console.log("Commenting on bite", biteId);
+    if (!signer || !account)
+      return message.error("Please connect your wallet first");
+    if (!commentInput) return message.error("Comment cannot be empty");
+    setLoading({ comment: true });
+    try {
+      // create new comment in contract
+      const tx = await bitesContract
+        .connect(signer)
+        .commentOnBite(biteId, commentInput);
+      console.log("tx", tx);
+      await tx.wait();
+      message.success("Comment posted successfully");
+      setCommentInput("");
+    } catch (err) {
+      console.error("Error posting comment", err);
+      message.error("Failed to post comment. Please try again later");
+    } finally {
+      setLoading({ comment: false });
+    }
   };
 
   return (
     <Space direction="vertical" size="large" style={{ width: "100%" }}>
       <Card
         actions={[
-          <Button key="post" type="primary" onClick={handlePost}>
+          <Button
+            key="post"
+            type="primary"
+            loading={loading?.post}
+            onClick={handlePostBite}
+          >
             Post
           </Button>
         ]}
@@ -70,7 +141,9 @@ export default function App() {
         <TextArea
           rows={4}
           value={biteInput?.content}
-          onChange={handleContentChange}
+          onChange={(e) =>
+            setBiteInput({ ...biteInput, content: e.target.value })
+          }
           placeholder="What's happening?"
           autoSize={{ minRows: 3, maxRows: 5 }}
         />
@@ -78,21 +151,30 @@ export default function App() {
           name="file"
           type="select"
           accept="image/*"
-          showUploadList
           listType="picture"
           previewFile={true}
           onRemove={() => setBiteInput({ ...biteInput, image: null })}
-          progress="percent"
           fileList={biteInput?.image ? [biteInput.image] : []}
-          customRequest={({ file }) =>
-            setBiteInput({ ...biteInput, image: file })
-          }
+          customRequest={({ file }) => {
+            console.log("Uploading file...", file);
+            setBiteInput({ ...biteInput, image: file });
+          }}
           multiple={false}
         >
           <Button icon={<PictureOutlined />} />
         </Upload>
+        {/* show image if present */}
+        {biteInput?.image && (
+          <Image
+            src={URL.createObjectURL(biteInput?.image)}
+            style={{
+              marginTop: 10,
+              borderRadius: 10,
+              border: "1px solid grey"
+            }}
+          />
+        )}
       </Card>
-      {/* toggler on right to show my posts only */}
       <Space style={{ float: "right" }}>
         <Switch
           checkedChildren="On"
@@ -111,27 +193,57 @@ export default function App() {
                 src={`https://api.dicebear.com/5.x/open-peeps/svg?seed=${bite?.author}`}
                 style={{ border: "1px solid grey" }}
               />
-              <Text>
-                {bite?.author?.slice(0, 6) +
-                  "..." +
-                  bite?.author?.slice(-4) +
-                  " • " +
-                  " 2h ago"}
-              </Text>
+              <Text>{ellipsisAddress(bite?.author) + " • " + " 2h ago"}</Text>
             </Space>
           }
           hoverable
           loading={loading?.read}
           actions={[
             <LikeOutlined key="like" />,
-            <CommentOutlined key="comment" />,
+            <Popconfirm
+              key="comment"
+              onConfirm={() => handleCommentOnBite(bite?.id)}
+              title={
+                <div>
+                  <List
+                    dataSource={bite?.comments}
+                    renderItem={(comment) => (
+                      <List.Item key={comment?.author}>
+                        <List.Item.Meta
+                          avatar={
+                            <Avatar
+                              src={`https://api.dicebear.com/5.x/open-peeps/svg?seed=${comment?.author}`}
+                            />
+                          }
+                          title={
+                            <Text>{ellipsisAddress(comment?.author)}</Text>
+                          }
+                          description={comment?.content}
+                        />
+                        <Text>{comment?.createdAt}</Text>
+                      </List.Item>
+                    )}
+                  />
+                  <TextArea
+                    rows={4}
+                    cols={50}
+                    value={commentInput}
+                    onChange={(e) => setCommentInput(e.target.value)}
+                    placeholder="Add a comment"
+                  />
+                </div>
+              }
+            >
+              <CommentOutlined />
+              {" " + bite?.comments?.length}
+            </Popconfirm>,
             <ShareAltOutlined key="share" />
           ]}
         >
           <Card.Meta description={bite?.content} />
           {bite?.imageHash && (
             <Image
-              src={bite?.imageHash}
+              src={`https://ipfs.io/ipfs/${bite?.imageHash}`}
               style={{
                 marginTop: 10,
                 borderRadius: 10
