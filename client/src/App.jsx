@@ -14,7 +14,7 @@ import {
   message
 } from "antd";
 import {
-  PictureOutlined,
+  PictureTwoTone,
   LikeOutlined,
   CommentOutlined,
   ShareAltOutlined,
@@ -158,6 +158,7 @@ export default function App() {
   return (
     <Space direction="vertical" size="large" style={{ width: "100%" }}>
       <Card
+        title="Create a new Bite"
         actions={[
           <Button
             key="post"
@@ -192,7 +193,15 @@ export default function App() {
           }}
           multiple={false}
         >
-          <Button icon={<PictureOutlined />} />
+          <Button
+            size="large"
+            shape="circle"
+            style={{
+              marginTop: 10,
+              border: "1px solid grey"
+            }}
+            icon={<PictureTwoTone />}
+          />
         </Upload>
         {/* show image if present */}
         {biteInput?.image && (
@@ -201,7 +210,9 @@ export default function App() {
             style={{
               marginTop: 10,
               borderRadius: 10,
-              border: "1px solid grey"
+              border: "1px solid grey",
+              maxWidth: "300px",
+              maxHeight: "300px"
             }}
           />
         )}
@@ -304,7 +315,9 @@ export default function App() {
               src={`https://ipfs.io/ipfs/${bite?.imageHash}`}
               style={{
                 marginTop: 10,
-                borderRadius: 10
+                borderRadius: 10,
+                maxWidth: "450px",
+                maxHeight: "400px"
               }}
             />
           )}

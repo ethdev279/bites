@@ -1,6 +1,7 @@
 import { Divider, Layout } from "antd";
 import { ConnectWallet } from "@thirdweb-dev/react";
 import "antd/dist/reset.css";
+import "./SiteLayout.css";
 
 const { Header, Footer, Content } = Layout;
 
@@ -42,13 +43,14 @@ export default function SiteLayout({ children }) {
         style={{
           margin: "12px 8px",
           padding: 12,
-          minHeight: "100%",
           color: "black",
-          maxHeight: "100%"
+          display: "flex",
+          justifyContent: "center"
         }}
       >
-        {children}
+        <div className="content-wrapper">{children}</div>
       </Content>
+
       <Divider plain />
       <Footer style={{ textAlign: "center" }}>
         <a
