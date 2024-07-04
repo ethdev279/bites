@@ -54,7 +54,7 @@ export default function SiteLayout({ children }) {
       <Divider plain />
       <Footer style={{ textAlign: "center" }}>
         <a
-          href="https://github.com/Salmandabbakuti"
+          href="https://github.com/ethdev279"
           target="_blank"
           rel="noopener noreferrer"
         >

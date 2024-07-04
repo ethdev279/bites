@@ -57,8 +57,12 @@ export default function App() {
     setLoading({ read: true });
     client
       .request(GET_BITES_QUERY, {
-        first: 10,
+        first: 50,
         skip: 0,
+        comments_first: 50,
+        comments_skip: 0,
+        comments_orderBy: "createdAt",
+        comments_orderDirection: "desc",
         orderBy: "createdAt",
         orderDirection: "desc",
         where: {
