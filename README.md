@@ -1,13 +1,6 @@
 # Bites
 
-Bites is a decentralized Twitter-like application built on the Ethereum blockchain. Users can create short posts, upload images, and comment on posts. The application leverages smart contracts for posting and commenting, and IPFS for image storage. Bites uses TheGraph to index smart contract events and employs subgraphs to efficiently display posts, filter, and search Bites, enhancing the user experience with seamless data retrieval and real-time updates
-
-### Deployed Resources:
-
-- [Bites App](https://bites-xi.vercel.app/)
-- [Bites Contract](https://sepolia.etherscan.io/address/0xf37a972B8432260135eDaD65b499A1D29Beaf493)
-- [Bites Subgraph](https://api.studio.thegraph.com/proxy/18583/bites/version/latest)
--
+Bites is a decentralized Twitter-like application built on the Ethereum blockchain. Users can create short posts, upload images, and comment on posts. The application leverages smart contracts for posting and commenting, and IPFS for image storage. Bites uses TheGraph to index smart contract events and employs subgraphs to efficiently display posts, filter, and search Bites, enhancing the user experience with seamless data retrieval and real-time updates.
 
 ### Features
 
@@ -23,6 +16,12 @@ Bites is a decentralized Twitter-like application built on the Ethereum blockcha
 - Next.js, Antd
 - Thirdweb
 - ethers.js
+
+### Deployed Resources:
+
+- [Bites App](https://bites-xi.vercel.app/)
+- [Bites Contract](https://sepolia.etherscan.io/address/0xf37a972B8432260135eDaD65b499A1D29Beaf493)
+- [Bites Subgraph](https://api.studio.thegraph.com/proxy/18583/bites/version/latest)
 
 ## Getting Started
 
