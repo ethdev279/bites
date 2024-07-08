@@ -1,6 +1,7 @@
 import { Divider, Layout } from "antd";
 import { ConnectWallet } from "@thirdweb-dev/react";
 import "antd/dist/reset.css";
+import "./SiteLayout.css";
 
 const { Header, Footer, Content } = Layout;
 
@@ -22,11 +23,11 @@ export default function SiteLayout({ children }) {
         <h3
           style={{
             margin: 0,
-            padding: "0 6px",
+            padding: "0 15px",
             fontWeight: "bold"
           }}
         >
-          Bites
+          💬 Bites
         </h3>
         <ConnectWallet
           theme={"light"} // light | dark
@@ -42,17 +43,18 @@ export default function SiteLayout({ children }) {
         style={{
           margin: "12px 8px",
           padding: 12,
-          minHeight: "100%",
           color: "black",
-          maxHeight: "100%"
+          display: "flex",
+          justifyContent: "center"
         }}
       >
-        {children}
+        <div className="content-wrapper">{children}</div>
       </Content>
+
       <Divider plain />
       <Footer style={{ textAlign: "center" }}>
         <a
-          href="https://github.com/Salmandabbakuti"
+          href="https://github.com/ethdev279"
           target="_blank"
           rel="noopener noreferrer"
         >

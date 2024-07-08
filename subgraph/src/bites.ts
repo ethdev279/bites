@@ -19,6 +19,7 @@ export function handleBiteCreated(event: BiteCreated): void {
   bite.author = event.params.author;
   bite.createdAt = event.block.timestamp;
   bite.updatedAt = event.block.timestamp;
+  bite.save();
 }
 
 export function handleCommentedOnBite(event: CommentedOnBite): void {
@@ -36,6 +37,7 @@ export function handleCommentedOnBite(event: CommentedOnBite): void {
   const comment = new Comment(event.params.id.toString());
   comment.content = event.params.content;
   comment.author = event.params.author;
+  comment.bite = event.params.biteId.toString();
   comment.createdAt = event.block.timestamp;
   comment.updatedAt = event.block.timestamp;
   comment.save();
