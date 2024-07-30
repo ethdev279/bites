@@ -6,11 +6,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: Bites
-    network: sepolia
+    network: zksync-era-sepolia
     source:
-      address: "0xf37a972B8432260135eDaD65b499A1D29Beaf493"
+      address: "0x8e1f23171375BC3f2DfF19f8F0F1f4a93451CB74"
       abi: Bites
-      startBlock: 6236233
+      startBlock: 3548511
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

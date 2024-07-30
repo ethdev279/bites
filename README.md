@@ -21,8 +21,8 @@ Bites is a decentralized Twitter-like application built on the Ethereum blockcha
 ### Deployed Resources:
 
 - [Bites App](https://bites-xi.vercel.app/)
-- [Bites Contract](https://sepolia.etherscan.io/address/0xf37a972B8432260135eDaD65b499A1D29Beaf493)
-- [Bites Subgraph](https://api.studio.thegraph.com/proxy/18583/bites/version/latest)
+- [Bites Contract](https://sepolia.explorer.zksync.io/address/0xf37a972B8432260135eDaD65b499A1D29Beaf493)
+- [Bites Subgraph](https://api.studio.thegraph.com/proxy/18583/zk-bites/version/latest)
 
 ## Getting Started
 
