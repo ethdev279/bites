@@ -10,6 +10,7 @@ Bites is a decentralized Twitter-like application built on the Ethereum blockcha
 
 ### Tech Stack
 
+- ZkSync, zksync-cli
 - Solidity, Hardhat
 - The Graph
 - IPFS
@@ -25,6 +26,10 @@ Bites is a decentralized Twitter-like application built on the Ethereum blockcha
 
 ## Getting Started
 
+This project was scaffolded with [zksync-cli](https://github.com/matter-labs/zksync-cli).
+
+> Rename `.env.example` to `.env` and update the values.
+
 1. Compile and deploy the smart contracts
 
 ```bash
@@ -33,14 +38,10 @@ Bites is a decentralized Twitter-like application built on the Ethereum blockcha
 npm install
 
 # compile contracts
-npx hardhat compile
-
-# set PRIVATE_KEY in hardhat vars
-
-npx hardhat vars set PRIVATE_KEY
+npm run compile
 
 # Deploy contracts
-npx hardhat deploy
+npm run deploy
 ```
 
 2. Deploy the subgraph
@@ -50,6 +51,7 @@ npx hardhat deploy
 ```bash
 # Install dependencies
 cd subgraph
+
 npm install
 
 npm run codegen

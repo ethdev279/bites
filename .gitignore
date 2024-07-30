@@ -1,9 +1,12 @@
 node_modules/
 .env
-
 # Hardhat files
 /cache
 /artifacts
+
+# zksync artifacts
+artifacts-zk
+cache-zk
 
 # TypeChain files
 /typechain
