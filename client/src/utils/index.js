@@ -1,6 +1,7 @@
 import { Contract } from "@ethersproject/contracts";
 import { GraphQLClient } from "graphql-request";
-import { BITES_CONTRACT_ADDRESS } from "./constants";
+import { utils } from "zksync-ethers";
+import { BITES_CONTRACT_ADDRESS, PAYMASTER_ADDRESS } from "./constants";
 
 const BitesABI = [
   "function createBite(string _content, string _imageHash)",
@@ -10,6 +11,10 @@ const BitesABI = [
 ];
 
 export const bitesContract = new Contract(BITES_CONTRACT_ADDRESS, BitesABI);
+export const paymasterParams = utils.getPaymasterParams(PAYMASTER_ADDRESS, {
+  type: "General",
+  innerInput: new Uint8Array()
+});
 
 const subgraphUrl = "https://api.studio.thegraph.com/proxy/18583/zk-bites/version/latest";
 export const subgraphClient = new GraphQLClient(subgraphUrl);

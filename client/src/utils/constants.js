@@ -3,6 +3,8 @@ import { gql } from "graphql-request";
 export const BITES_CONTRACT_ADDRESS =
   "0x8e1f23171375BC3f2DfF19f8F0F1f4a93451CB74";
 
+export const PAYMASTER_ADDRESS = "";
+
 export const GET_BITES_QUERY = gql`
   query bites(
     $first: Int

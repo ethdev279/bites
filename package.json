@@ -7,6 +7,7 @@
   "repository": "https://github.com/matter-labs/zksync-hardhat-template.git",
   "scripts": {
     "deploy": "hardhat deploy-zksync --script deploy.ts",
+    "deploy:paymaster": "hardhat deploy-zksync --script paymaster/deploy.ts",
     "interact": "hardhat deploy-zksync --script interact.ts",
     "compile": "hardhat compile",
     "clean": "hardhat clean",

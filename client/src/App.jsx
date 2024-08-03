@@ -23,9 +23,11 @@ import {
 import { useStorageUpload, useSigner, useAddress } from "@thirdweb-dev/react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { utils, Web3Provider } from "zksync-ethers";
 import {
   ellipsisAddress,
   bitesContract,
+  paymasterParams,
   subgraphClient as client
 } from "./utils";
 import { GET_BITES_QUERY } from "./utils/constants";
@@ -116,10 +118,28 @@ export default function App() {
         imageHash = imageIpfs?.split("://")[1];
         message.success("Image uploaded successfully");
       }
-      // create new bite in contract
+      // create new bite in contract with paymaster
+      const provider = new Web3Provider(window.ethereum);
+      const zkSigner = provider.getSigner();
+      const gasLimit = await bitesContract
+        .connect(zkSigner)
+        .estimateGas.createBite(biteInput?.content, imageHash, {
+          customData: {
+            gasPerPubdata: utils.DEFAULT_GAS_PER_PUBDATA_LIMIT,
+            paymasterParams
+          }
+        });
       const tx = await bitesContract
-        .connect(signer)
-        .createBite(biteInput?.content, imageHash);
+        .connect(zkSigner)
+        .createBite(biteInput?.content, imageHash, {
+          maxPriorityFeePerGas: 0n,
+          maxFeePerGas: await provider.getGasPrice(),
+          gasLimit,
+          customData: {
+            gasPerPubdata: utils.DEFAULT_GAS_PER_PUBDATA_LIMIT,
+            paymasterParams
+          }
+        });
       console.log("tx", tx);
       await tx.wait();
       message.success("Bite posted successfully");
@@ -139,10 +159,28 @@ export default function App() {
     if (!commentInput) return message.error("Comment cannot be empty");
     setLoading({ comment: true });
     try {
-      // create new comment in contract
+      // create new comment in contract with paymaster attached
+      const provider = new Web3Provider(window.ethereum);
+      const zkSigner = provider.getSigner();
+      const gasLimit = await bitesContract
+        .connect(zkSigner)
+        .estimateGas.commentOnBite(biteId, commentInput, {
+          customData: {
+            gasPerPubdata: utils.DEFAULT_GAS_PER_PUBDATA_LIMIT,
+            paymasterParams
+          }
+        });
       const tx = await bitesContract
-        .connect(signer)
-        .commentOnBite(biteId, commentInput);
+        .connect(zkSigner)
+        .commentOnBite(biteId, commentInput, {
+          maxPriorityFeePerGas: 0n,
+          maxFeePerGas: await provider.getGasPrice(),
+          gasLimit,
+          customData: {
+            gasPerPubdata: utils.DEFAULT_GAS_PER_PUBDATA_LIMIT,
+            paymasterParams
+          }
+        });
       console.log("tx", tx);
       await tx.wait();
       message.success("Comment posted successfully");
