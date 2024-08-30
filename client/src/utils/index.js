@@ -16,7 +16,7 @@ export const paymasterParams = utils.getPaymasterParams(PAYMASTER_ADDRESS, {
   innerInput: new Uint8Array()
 });
 
-const subgraphUrl = "https://api.studio.thegraph.com/proxy/18583/zk-bites/version/latest";
+const subgraphUrl = "https://api.studio.thegraph.com/query/18583/zk-bites/version/latest";
 export const subgraphClient = new GraphQLClient(subgraphUrl);
 
 export const ellipsisAddress = (address) =>
