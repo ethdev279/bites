@@ -76,9 +76,9 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ### Screenshots
 
-![Screen1](https://github.com/ethdev279/bites/assets/45661693/7b1abaf3-9500-46ea-9080-cab935dc301c)
-![Screen2](https://github.com/ethdev279/bites/assets/45661693/cf75ab73-90fd-4a34-be84-fb65f0fc2b15)
-![Screen3](https://github.com/ethdev279/bites/assets/45661693/11ca5e3b-ab26-4994-b63e-3d06c8c2401a)
+![Screen1](https://github.com/user-attachments/assets/26da483f-7150-40e7-a3bb-2208283a06c0)
+![Screen2](https://github.com/user-attachments/assets/1d7c9124-9266-44b2-b530-5217128255bd)
+![Screen3](https://github.com/user-attachments/assets/e34ddfe9-6a99-4d53-82c3-4cab59c3d519)
 
 ## License
 
