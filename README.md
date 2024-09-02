@@ -7,6 +7,7 @@ Bites is a decentralized Twitter-like application built on the Ethereum blockcha
 - Create short posts(Bites) with text and images
 - Like & Comment on posts
 - Search and filter posts(Bites)
+- Gasless transactions with ZKSync paymaster
 
 ### Tech Stack
 
@@ -22,6 +23,7 @@ Bites is a decentralized Twitter-like application built on the Ethereum blockcha
 
 - [Bites App](https://bites-xi.vercel.app/)
 - [Bites Contract](https://sepolia.explorer.zksync.io/address/0x8e1f23171375BC3f2DfF19f8F0F1f4a93451CB74)
+- [ZK Paymaster](https://sepolia.explorer.zksync.io/address/0x0De12bb08A3c3006228269211F2505bCB444a4BA)
 - [Bites Subgraph](https://api.studio.thegraph.com/proxy/18583/zk-bites/version/latest)
 
 ## Getting Started
