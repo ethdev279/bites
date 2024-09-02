@@ -7,9 +7,11 @@ Bites is a decentralized Twitter-like application built on the Ethereum blockcha
 - Create short posts(Bites) with text and images
 - Like & Comment on posts
 - Search and filter posts(Bites)
+- Gasless transactions with ZKSync paymaster
 
 ### Tech Stack
 
+- ZkSync, zksync-cli
 - Solidity, Hardhat
 - The Graph
 - IPFS
@@ -20,10 +22,15 @@ Bites is a decentralized Twitter-like application built on the Ethereum blockcha
 ### Deployed Resources:
 
 - [Bites App](https://bites-xi.vercel.app/)
-- [Bites Contract](https://sepolia.etherscan.io/address/0xf37a972B8432260135eDaD65b499A1D29Beaf493)
-- [Bites Subgraph](https://api.studio.thegraph.com/proxy/18583/bites/version/latest)
+- [Bites Contract](https://sepolia.explorer.zksync.io/address/0x8e1f23171375BC3f2DfF19f8F0F1f4a93451CB74)
+- [ZK Paymaster](https://sepolia.explorer.zksync.io/address/0x0De12bb08A3c3006228269211F2505bCB444a4BA)
+- [Bites Subgraph](https://api.studio.thegraph.com/proxy/18583/zk-bites/version/latest)
 
 ## Getting Started
+
+This project was scaffolded with [zksync-cli](https://github.com/matter-labs/zksync-cli).
+
+> Rename `.env.example` to `.env` and update the values.
 
 1. Compile and deploy the smart contracts
 
@@ -33,14 +40,10 @@ Bites is a decentralized Twitter-like application built on the Ethereum blockcha
 npm install
 
 # compile contracts
-npx hardhat compile
-
-# set PRIVATE_KEY in hardhat vars
-
-npx hardhat vars set PRIVATE_KEY
+npm run compile
 
 # Deploy contracts
-npx hardhat deploy
+npm run deploy
 ```
 
 2. Deploy the subgraph
@@ -50,6 +53,7 @@ npx hardhat deploy
 ```bash
 # Install dependencies
 cd subgraph
+
 npm install
 
 npm run codegen
@@ -74,9 +78,9 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ### Screenshots
 
-![Screen1](https://github.com/ethdev279/bites/assets/45661693/7b1abaf3-9500-46ea-9080-cab935dc301c)
-![Screen2](https://github.com/ethdev279/bites/assets/45661693/cf75ab73-90fd-4a34-be84-fb65f0fc2b15)
-![Screen3](https://github.com/ethdev279/bites/assets/45661693/11ca5e3b-ab26-4994-b63e-3d06c8c2401a)
+![Screen1](https://github.com/user-attachments/assets/26da483f-7150-40e7-a3bb-2208283a06c0)
+![Screen2](https://github.com/user-attachments/assets/1d7c9124-9266-44b2-b530-5217128255bd)
+![Screen3](https://github.com/user-attachments/assets/e34ddfe9-6a99-4d53-82c3-4cab59c3d519)
 
 ## License
 

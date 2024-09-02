@@ -58,7 +58,7 @@ export default function SiteLayout({ children }) {
           target="_blank"
           rel="noopener noreferrer"
         >
-          ©{new Date().getFullYear()} Bites. Powered by TheGraph
+          ©{new Date().getFullYear()} Bites. Powered by ZKsync & TheGraph
         </a>
       </Footer>
     </Layout>
