@@ -2,8 +2,7 @@
 pragma solidity 0.8.28;
 
 contract Bites {
-    uint256 currentBiteId;
-    uint256 currentCommentId;
+    uint256 public currentBiteId;
 
     struct Bite {
         uint256 id;

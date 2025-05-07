@@ -23,14 +23,8 @@ import {
 import { useStorageUpload, useSigner, useAddress } from "@thirdweb-dev/react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { utils, Web3Provider } from "zksync-ethers";
-import {
-  ellipsisAddress,
-  bitesContract,
-  paymasterParams,
-  subgraphClient as client
-} from "./utils";
-import { GET_BITES_QUERY } from "./utils/constants";
+import { ellipsisAddress, bitesContract } from "./utils";
+import { executeOperation } from "./utils/aaUtils";
 import "./App.css";
 
 const { TextArea, Search } = Input;
@@ -55,46 +49,27 @@ export default function App() {
   const signer = useSigner();
   const account = useAddress();
 
-  const getBites = () => {
+  const getBites = async () => {
     setLoading({ read: true });
-    client
-      .request(GET_BITES_QUERY, {
-        first: 50,
-        skip: 0,
-        comments_first: 50,
-        comments_skip: 0,
-        comments_orderBy: "createdAt",
-        comments_orderDirection: "desc",
-        orderBy: "createdAt",
-        orderDirection: "desc",
-        where: {
-          and: [
-            ...(showMyPosts
-              ? [
-                  {
-                    author: account
-                  }
-                ]
-              : []),
-            ...(searchInput
-              ? [
-                  {
-                    content_contains_nocase: searchInput
-                  }
-                ]
-              : [])
-          ]
-        }
-      })
-      .then((data) => {
-        console.log("data", data?.bites);
-        setBites(data?.bites);
-      })
-      .catch((err) => {
-        console.error("Error fetching bites", err);
-        message.error("Failed to fetch bites. Please try again later");
-      })
-      .finally(() => setLoading({ read: false }));
+    try {
+      // get currentBiteId from contract
+      const currentBiteId = await bitesContract.currentBiteId();
+      console.log("currentBiteId ->", currentBiteId);
+
+      // loop through all bites and get their details
+      const bitesList = await Promise.all(
+        Array.from({ length: currentBiteId }, (_, i) =>
+          bitesContract.bites(i + 1)
+        )
+      );
+      console.log("bitesList ->", bitesList);
+      setBites(bitesList);
+      setLoading({ read: false });
+    } catch (err) {
+      console.error("Error fetching bites", err);
+      setLoading({ read: false });
+      message.error("Failed to fetch bites. Please try again later");
+    }
   };
 
   const handlePostBite = async () => {
@@ -119,29 +94,13 @@ export default function App() {
         message.success("Image uploaded successfully");
       }
       // create new bite in contract with paymaster
-      const provider = new Web3Provider(window.ethereum);
-      const zkSigner = provider.getSigner();
-      const gasLimit = await bitesContract
-        .connect(zkSigner)
-        .estimateGas.createBite(biteInput?.content, imageHash, {
-          customData: {
-            gasPerPubdata: utils.DEFAULT_GAS_PER_PUBDATA_LIMIT,
-            paymasterParams
-          }
-        });
-      const tx = await bitesContract
-        .connect(zkSigner)
-        .createBite(biteInput?.content, imageHash, {
-          maxPriorityFeePerGas: 0n,
-          maxFeePerGas: await provider.getGasPrice(),
-          gasLimit,
-          customData: {
-            gasPerPubdata: utils.DEFAULT_GAS_PER_PUBDATA_LIMIT,
-            paymasterParams
-          }
-        });
-      console.log("tx", tx);
-      await tx.wait();
+      const createBiteTx = await executeOperation(
+        signer,
+        bitesContract.address,
+        "createBite",
+        [biteInput?.content, imageHash]
+      );
+      console.log("createBiteTx ->", createBiteTx);
       message.success("Bite posted successfully");
       setBiteInput({ content: "", image: null });
     } catch (err) {
@@ -154,43 +113,7 @@ export default function App() {
 
   const handleCommentOnBite = async (biteId) => {
     console.log("Commenting on bite", biteId);
-    if (!signer || !account)
-      return message.error("Please connect your wallet first");
-    if (!commentInput) return message.error("Comment cannot be empty");
-    setLoading({ comment: true });
-    try {
-      // create new comment in contract with paymaster attached
-      const provider = new Web3Provider(window.ethereum);
-      const zkSigner = provider.getSigner();
-      const gasLimit = await bitesContract
-        .connect(zkSigner)
-        .estimateGas.commentOnBite(biteId, commentInput, {
-          customData: {
-            gasPerPubdata: utils.DEFAULT_GAS_PER_PUBDATA_LIMIT,
-            paymasterParams
-          }
-        });
-      const tx = await bitesContract
-        .connect(zkSigner)
-        .commentOnBite(biteId, commentInput, {
-          maxPriorityFeePerGas: 0n,
-          maxFeePerGas: await provider.getGasPrice(),
-          gasLimit,
-          customData: {
-            gasPerPubdata: utils.DEFAULT_GAS_PER_PUBDATA_LIMIT,
-            paymasterParams
-          }
-        });
-      console.log("tx", tx);
-      await tx.wait();
-      message.success("Comment posted successfully");
-      setCommentInput("");
-    } catch (err) {
-      console.error("Error posting comment", err);
-      message.error("Failed to post comment. Please try again later");
-    } finally {
-      setLoading({ comment: false });
-    }
+    // TODO: implement comment functionality
   };
 
   useEffect(() => {

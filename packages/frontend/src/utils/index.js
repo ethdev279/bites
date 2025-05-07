@@ -1,23 +1,27 @@
 import { Contract } from "@ethersproject/contracts";
-import { GraphQLClient } from "graphql-request";
-import { utils } from "zksync-ethers";
-import { BITES_CONTRACT_ADDRESS, PAYMASTER_ADDRESS } from "./constants";
+import { JsonRpcProvider } from "@ethersproject/providers";
+import { BITES_CONTRACT_ADDRESS } from "./constants";
 
 const BitesABI = [
   "function createBite(string _content, string _imageHash)",
-  "function commentOnBite(uint256 _biteId, string _content)",
-  "function biteComments(uint256 biteId, uint256 commentId) view returns (uint256 id, uint256 biteId, string content, address author)",
+  "function bitesList(uint256) view returns (uint256 id, string content, string imageHash, uint256 likes, uint256 comments, address author)",
   "function bites(uint256 biteId) view returns (uint256 id, string content, string imageHash, address author)",
+  "function currentBiteId() view returns (uint256)",
+  "function getAllBites() view returns (tuple(uint256 id, string content, string imageHash, uint256 likes, uint256 comments, address author)[])"
 ];
+const neroTestnetProvider = new JsonRpcProvider(
+  "https://rpc-testnet.nerochain.io",
+  689,
+  {
+    staticNetwork: true
+  }
+);
 
-export const bitesContract = new Contract(BITES_CONTRACT_ADDRESS, BitesABI);
-export const paymasterParams = utils.getPaymasterParams(PAYMASTER_ADDRESS, {
-  type: "General",
-  innerInput: new Uint8Array()
-});
-
-const subgraphUrl = "https://api.studio.thegraph.com/query/18583/zk-bites/version/latest";
-export const subgraphClient = new GraphQLClient(subgraphUrl);
+export const bitesContract = new Contract(
+  BITES_CONTRACT_ADDRESS,
+  BitesABI,
+  neroTestnetProvider
+);
 
 export const ellipsisAddress = (address) =>
   address.slice(0, 6) + "..." + address.slice(-4);

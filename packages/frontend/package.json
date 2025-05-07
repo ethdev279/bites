@@ -12,15 +12,14 @@
   "dependencies": {
     "@ant-design/icons": "^5.3.7",
     "@ethersproject/contracts": "^5.7.0",
+    "@ethersproject/providers": "^5.8.0",
     "@thirdweb-dev/chains": "^0.1.120",
     "@thirdweb-dev/react": "^4.9.4",
     "antd": "^5.19.0",
     "dayjs": "^1.11.11",
-    "graphql": "^16.9.0",
-    "graphql-request": "^7.1.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "zksync-ethers": "^5.9.1"
+    "userop": "github:nerochain/aa-userop-sdk"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",
