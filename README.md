@@ -1,13 +1,13 @@
 # Bites
 
-Bites is a decentralized Twitter-like application built on the Ethereum blockchain. Users can create short posts, upload images, and comment on posts. The application leverages smart contracts for posting and commenting, and IPFS for image storage. Bites uses TheGraph to index smart contract events and employs subgraphs to efficiently display posts, filter, and search Bites, enhancing the user experience with seamless data retrieval and real-time updates.
+Bites is a decentralized Twitter-like application built on the NERO Chain. Users can create short posts, upload images, and comment on posts. The application leverages smart contracts for posting and commenting, and IPFS for image storage. By integrating NERO’s Account Abstraction (AA) framework and Paymaster system, Bites offers a truly frictionless user experience. New users get onboarded with smart wallets automatically created for them, and can interact with the platform without worrying about gas fees or token management. Every action — whether it's posting a Bite, liking a post, or commenting — is seamlessly sponsored by the dApp, thanks to NERO's programmable gas abstraction.
 
 ### Features
 
 - Create short posts(Bites) with text and images
-- Like & Comment on posts
-- Search and filter posts(Bites)
 - Smart wallets(Account Abstraction) & Gasless transactions with NERO Chain AA Platform % Paymaster API
+- Like & Comment on posts(Coming soon)
+- Search and filter posts(Coming soon)
 
 ### Tech Stack
 
@@ -18,11 +18,26 @@ Bites is a decentralized Twitter-like application built on the Ethereum blockcha
 - Thirdweb
 - ethers.js
 
+### Project Structure
+
+```bash
+bites/
+  ├── packages
+        ├── hardhat # Smart contracts and Hardhat project
+        ├── frontend #  frontend application
+```
+
+### Paymaster API and Account Abstraction Integration
+
+The Bites application utilizes NERO's Paymaster API and Account Abstraction framework to provide a seamless user experience. This integration allows users to interact with the platform without needing to manage gas fees or tokens. The Paymaster API sponsors all transactions, ensuring that users can focus on creating and engaging with content without worrying about the underlying complexities of blockchain interactions.
+
+You can find the UserOpSDK and Paymaster API implementation in the `packages/frontend/src/utils/aaUtils.js` [file](https://github.com/ethdev279/bites/blob/main/packages/frontend/src/utils/aaUtils.js) and integration can be found in the `packages/frontend/src/App.js` [file](https://github.com/ethdev279/bites/blob/b77478390962a7ba108e69c7656c73bff723ad13/packages/frontend/src/App.jsx#L97).
+
 ### Deployed Resources:
 
 - [Bites App](https://bites-xi.vercel.app/)
-- [Bites Contract](https://sepolia.explorer.zksync.io/address/0x8e1f23171375BC3f2DfF19f8F0F1f4a93451CB74)
-- [Bites Paymaster](https://sepolia.explorer.zksync.io/address/0x0De12bb08A3c3006228269211F2505bCB444a4BA)
+- [Bites Contract](https://testnet.neroscan.io/address/0x641a4700664b9042eec0ed7cddde4c2747ba3338?tab=Transactions)
+- [Bites Paymaster](https://testnet.neroscan.io/address/0x5a6680dfd4a77feea0a7be291147768eaa2414ad)
 
 ## Getting Started
 
@@ -64,7 +79,6 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ### Screenshots
 
 ![Screen1](https://github.com/user-attachments/assets/26da483f-7150-40e7-a3bb-2208283a06c0)
-![Screen2](https://github.com/user-attachments/assets/1d7c9124-9266-44b2-b530-5217128255bd)
 ![Screen3](https://github.com/user-attachments/assets/e34ddfe9-6a99-4d53-82c3-4cab59c3d519)
 
 ## License

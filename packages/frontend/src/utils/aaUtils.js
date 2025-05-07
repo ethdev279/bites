@@ -7,7 +7,7 @@ export const AA_PLATFORM_CONFIG = {
 };
 
 // Your API key from the NERO Chain AA Platform
-export const API_KEY = "your_api_key_here";
+export const API_KEY = import.meta.env.VITE_NERO_PLATFORM_API_KEY;
 
 export const NERO_RPC_URL = "https://rpc-testnet.nerochain.io";
 
