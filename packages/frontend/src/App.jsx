@@ -59,7 +59,7 @@ export default function App() {
       // loop through all bites and get their details
       const bitesList = await Promise.all(
         Array.from({ length: currentBiteId }, (_, i) =>
-          bitesContract.bites(i + 1)
+          bitesContract.bitesList(i)
         )
       );
       console.log("bitesList ->", bitesList);
@@ -118,7 +118,7 @@ export default function App() {
 
   useEffect(() => {
     getBites();
-  }, [showMyPosts, account]);
+  }, []);
 
   return (
     <Space direction="vertical" size="large" style={{ width: "100%" }}>
@@ -214,11 +214,11 @@ export default function App() {
           title={
             <Space>
               <Avatar
-                src={`https://api.dicebear.com/5.x/open-peeps/svg?seed=${bite?.author?.id}`}
+                src={`https://api.dicebear.com/5.x/open-peeps/svg?seed=${bite?.author}`}
                 style={{ border: "1px solid grey" }}
               />
               <Text title={dayjs(bite?.createdAt * 1000).format("MMM D, YY")}>
-                {ellipsisAddress(bite?.author?.id) +
+                {ellipsisAddress(bite?.author) +
                   " • " +
                   dayjs(bite?.createdAt * 1000).fromNow()}
               </Text>
@@ -226,51 +226,58 @@ export default function App() {
           }
           loading={loading?.read}
           actions={[
-            <LikeOutlined key="like" />,
-            <Popconfirm
+            <LikeOutlined
+              key="like"
+              onClick={() => message.info("Coming soon.")}
+            />,
+            <CommentOutlined
               key="comment"
-              onConfirm={() => handleCommentOnBite(bite?.id)}
-              title="Comments"
-              description={
-                <div>
-                  <List
-                    dataSource={bite?.comments}
-                    renderItem={(comment) => (
-                      <List.Item key={comment?.author?.id}>
-                        <List.Item.Meta
-                          avatar={
-                            <Avatar
-                              src={`https://api.dicebear.com/5.x/open-peeps/svg?seed=${comment?.author?.id}`}
-                            />
-                          }
-                          title={
-                            <Text>{ellipsisAddress(comment?.author?.id)}</Text>
-                          }
-                          description={comment?.content}
-                        />
-                        <Text
-                          title={dayjs(comment?.createdAt * 1000).format(
-                            "MMM D, YY"
-                          )}
-                        >
-                          {dayjs(comment?.createdAt * 1000).fromNow()}
-                        </Text>
-                      </List.Item>
-                    )}
-                  />
-                  <TextArea
-                    rows={4}
-                    cols={50}
-                    value={commentInput}
-                    onChange={(e) => setCommentInput(e.target.value)}
-                    placeholder="Add a comment"
-                  />
-                </div>
-              }
-            >
-              <CommentOutlined />
-              {" " + bite?.comments?.length}
-            </Popconfirm>,
+              onClick={() => message.info("Coming soon.")}
+            />,
+            // <Popconfirm
+            //   key="comment"
+            //   onConfirm={() => handleCommentOnBite(bite?.id)}
+            //   title="Comments"
+            //   description={
+            //     <div>
+            //       <List
+            //         dataSource={[]}
+            //         renderItem={(comment) => (
+            //           <List.Item key={comment?.author?.id}>
+            //             <List.Item.Meta
+            //               avatar={
+            //                 <Avatar
+            //                   src={`https://api.dicebear.com/5.x/open-peeps/svg?seed=${comment?.author?.id}`}
+            //                 />
+            //               }
+            //               title={
+            //                 <Text>{ellipsisAddress(comment?.author?.id)}</Text>
+            //               }
+            //               description={comment?.content}
+            //             />
+            //             <Text
+            //               title={dayjs(comment?.createdAt * 1000).format(
+            //                 "MMM D, YY"
+            //               )}
+            //             >
+            //               {dayjs(comment?.createdAt * 1000).fromNow()}
+            //             </Text>
+            //           </List.Item>
+            //         )}
+            //       />
+            //       <TextArea
+            //         rows={4}
+            //         cols={50}
+            //         value={commentInput}
+            //         onChange={(e) => setCommentInput(e.target.value)}
+            //         placeholder="Add a comment"
+            //       />
+            //     </div>
+            //   }
+            // >
+            //   <CommentOutlined />
+            //   {" 0"}
+            // </Popconfirm>,
             <ShareAltOutlined key="share" />
           ]}
         >

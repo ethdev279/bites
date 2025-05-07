@@ -2,7 +2,6 @@ import { Client, Presets } from "userop";
 import { bitesContract } from ".";
 
 export const AA_PLATFORM_CONFIG = {
-  neroRpc: "https://testnet.nerochain.io",
   bundlerRpc: "https://bundler.service.nerochain.io",
   paymasterRpc: "https://paymaster-testnet.nerochain.io"
 };
@@ -10,7 +9,7 @@ export const AA_PLATFORM_CONFIG = {
 // Your API key from the NERO Chain AA Platform
 export const API_KEY = "your_api_key_here";
 
-export const NERO_RPC_URL = "https://testnet.nerochain.io";
+export const NERO_RPC_URL = "https://rpc-testnet.nerochain.io";
 
 // Add NFT contract for testing
 export const CONTRACT_ADDRESSES = {
