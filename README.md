@@ -7,13 +7,12 @@ Bites is a decentralized Twitter-like application built on the Ethereum blockcha
 - Create short posts(Bites) with text and images
 - Like & Comment on posts
 - Search and filter posts(Bites)
-- Gasless transactions with ZKSync paymaster
+- Smart wallets(Account Abstraction) & Gasless transactions with NERO Chain AA Platform % Paymaster API
 
 ### Tech Stack
 
-- ZkSync, zksync-cli
+- NERO Chain, UserOpSDK, Paymaster API
 - Solidity, Hardhat
-- The Graph
 - IPFS
 - Next.js, Antd
 - Thirdweb
@@ -23,51 +22,37 @@ Bites is a decentralized Twitter-like application built on the Ethereum blockcha
 
 - [Bites App](https://bites-xi.vercel.app/)
 - [Bites Contract](https://sepolia.explorer.zksync.io/address/0x8e1f23171375BC3f2DfF19f8F0F1f4a93451CB74)
-- [ZK Paymaster](https://sepolia.explorer.zksync.io/address/0x0De12bb08A3c3006228269211F2505bCB444a4BA)
-- [Bites Subgraph](https://api.studio.thegraph.com/proxy/18583/zk-bites/version/latest)
+- [Bites Paymaster](https://sepolia.explorer.zksync.io/address/0x0De12bb08A3c3006228269211F2505bCB444a4BA)
 
 ## Getting Started
 
-This project was scaffolded with [zksync-cli](https://github.com/matter-labs/zksync-cli).
+This project was scaffolded with [hardhat](https://hardhat.org). Go to `packages/hardhat`.
 
 > Rename `.env.example` to `.env` and update the values.
 
 1. Compile and deploy the smart contracts
 
 ```bash
+# Go to the hardhat directory
+cd packages/hardhat
 
 # Install dependencies
 npm install
 
 # compile contracts
-npm run compile
+npx hardhat compile
 
 # Deploy contracts
-npm run deploy
+npx hardhat ignition deploy ./ignition/modules/Bites.ts --network nero_testnet
 ```
 
-2. Deploy the subgraph
-
-> Create a new subgraph on [The Graph](https://thegraph.com/studio). Update `subgraph.yaml` with deployed contract address and startblock. Update `package.json` deploy script with the subgraph name.
-
-```bash
-# Install dependencies
-cd subgraph
-
-npm install
-
-npm run codegen
-
-npm run deploy
-```
-
-3. Start the Next.js frontend
+3. Start the frontend
 
 > Copy `.env.example` to `.env` and update the values. Update `client/utils/constants.js` with the contract addresses.
 
 ```bash
 # Install dependencies
-cd client
+cd packages/frontend
 
 npm install
 
