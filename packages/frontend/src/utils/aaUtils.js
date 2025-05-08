@@ -87,11 +87,11 @@ export const initAABuilder = async (accountSigner) => {
   });
 
   // Set gas parameters for the UserOperation
-  builder.setCallGasLimit(300000);
-  builder.setVerificationGasLimit(2000000);
-  builder.setPreVerificationGas(100000);
-  builder.setMaxFeePerGas(10000000);
-  builder.setMaxPriorityFeePerGas(10000000);
+  builder.setCallGasLimit("0x88b8"); // 35,000 gas
+  builder.setVerificationGasLimit("0x33450"); // 210,000 gas
+  builder.setPreVerificationGas("0xc350"); // 50,000 gas
+  builder.setMaxFeePerGas("0x417465B6"); // 1.09 Gwei
+  builder.setMaxPriorityFeePerGas("0x40dbcf36"); // 1.08 Gwei
 
   return builder;
 };

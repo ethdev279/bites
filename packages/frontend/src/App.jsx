@@ -9,8 +9,6 @@ import {
   Typography,
   Image,
   Switch,
-  Popconfirm,
-  List,
   message
 } from "antd";
 import {
@@ -55,11 +53,10 @@ export default function App() {
       // get currentBiteId from contract
       const currentBiteId = await bitesContract.currentBiteId();
       console.log("currentBiteId ->", currentBiteId);
-
       // loop through all bites and get their details
       const bitesList = await Promise.all(
         Array.from({ length: currentBiteId }, (_, i) =>
-          bitesContract.bitesList(i)
+          bitesContract.bitesList(currentBiteId - i - 1)
         )
       );
       console.log("bitesList ->", bitesList);

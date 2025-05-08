@@ -9,7 +9,7 @@ const BitesABI = [
   "function currentBiteId() view returns (uint256)",
   "function getAllBites() view returns (tuple(uint256 id, string content, string imageHash, uint256 likes, uint256 comments, address author)[])"
 ];
-const neroTestnetProvider = new JsonRpcProvider(
+export const neroTestnetProvider = new JsonRpcProvider(
   "https://rpc-testnet.nerochain.io",
   689,
   {
